@@ -161,23 +161,23 @@ async def normalize_null_query_params(request: Request, call_next):
 class ExecRequest(BaseModel):
     command: str = Field(
         ...,
-        description="Shell command to execute. Supports chaining (&&, ||, ;), pipes (|), and redirections.",
-        json_schema_extra={"examples": ["echo hello", "ls -la && whoami"]},
+        description="",
+        json_schema_extra={},
     )
     cwd: Optional[str] = Field(
         None,
-        description="Working directory for the command. Defaults to the server's current directory if not set.",
+        description="Working dir",
     )
     env: Optional[dict[str, str]] = Field(
         None,
-        description="Extra environment variables merged into the subprocess environment.",
+        description="Env vars",
     )
 
 
 class InputRequest(BaseModel):
     input: str = Field(
         ...,
-        description="Text to send to the process's stdin. Include newline characters as needed.",
+        description="Text to send",
     )
 
 
@@ -1109,13 +1109,13 @@ async def execute(
     request: ExecRequest,
     wait: Optional[float] = Query(
         None,
-        description="Seconds to wait for the command to finish before returning. If the command completes in time, output is included inline. Null to return immediately.",
+        description="Wait s. Null = immediate.",
         ge=0,
         le=300,
     ),
     tail: Optional[int] = Query(
         None,
-        description="Return only the last N output entries. Useful to limit response size when only recent output matters.",
+        description="Return only the last N entries",
         ge=1,
     ),
 ):
@@ -1167,7 +1167,7 @@ async def execute(
     "/execute/{process_id}/status",
     operation_id="get_process_status",
     summary="Get command status and output",
-    description="Returns new output since the last poll, process status, and exit code. Output is drained on read to keep memory bounded.",
+    description="Return new proccess output",
     dependencies=[Depends(verify_api_key)],
     responses={
         404: {"description": "Process not found."},
@@ -1178,18 +1178,18 @@ async def get_status(
     process_id: str,
     wait: Optional[float] = Query(
         None,
-        description="Seconds to wait for the process to finish before returning. Returns early if the process exits. Null to return immediately.",
+        description="Wait s. Null = immediate.",
         ge=0,
         le=300,
     ),
     offset: int = Query(
         0,
-        description="Number of output entries to skip. Use next_offset from the previous response to get only new output.",
+        description="Entries to skip. Use next_offset from previous response",
         ge=0,
     ),
     tail: Optional[int] = Query(
         None,
-        description="Return only the last N output entries. Useful to limit response size when only recent output matters.",
+        description="Limit output to last N entries",
         ge=1,
     ),
 ):
@@ -1225,7 +1225,7 @@ async def get_status(
     "/execute/{process_id}/input",
     operation_id="send_process_input",
     summary="Send input to a running command",
-    description="Write text to the process's stdin. Include newline characters as needed.",
+    description="Write to stdin. Add newlines as needed",
     dependencies=[Depends(verify_api_key)],
     responses={
         404: {"description": "Process not found."},
