@@ -89,8 +89,7 @@ def get_system_prompt() -> str:
 
 
 _EXECUTE_DESCRIPTION = (
-    "Run a shell command in the background and return a command ID.\n\n"
-    + get_system_info()
+    "Run a shell command in the background and return a command ID.Always view the open terminal skill before executing commands."
 )
 if EXECUTE_DESCRIPTION:
     _EXECUTE_DESCRIPTION += "\n\n" + EXECUTE_DESCRIPTION
