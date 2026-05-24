@@ -162,4 +162,5 @@ if [ "${OPEN_TERMINAL_ALLOWED_DOMAINS+set}" = "set" ]; then
     exec capsh --drop=cap_net_admin -- -c "exec open-terminal $*"
 fi
 
+open-terminal mcp --transport streamable-http --host 0.0.0.0 --port 8001 &
 exec open-terminal "$@"

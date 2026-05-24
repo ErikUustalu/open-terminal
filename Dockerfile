@@ -61,7 +61,7 @@ COPY . .
 # Create a capability-bearing Python copy for the server process only.
 # The system python3 stays clean so user-spawned Python processes remain
 # dumpable (readable via /proc/[pid]/fd/ for port detection).
-RUN pip install --no-cache-dir . \
+RUN pip install --no-cache-dir .[mcp] \
     && cp "$(readlink -f "$(which python3)")" /usr/local/bin/python3-ot \
     && setcap cap_setgid+ep /usr/local/bin/python3-ot \
     && sed -i "1s|.*|#!/usr/local/bin/python3-ot|" "$(which open-terminal)"
@@ -74,6 +74,7 @@ ENV PATH="/home/user/.local/bin:${PATH}"
 WORKDIR /home/user
 
 EXPOSE 8000
+EXPOSE 8001
 
 COPY entrypoint.sh /app/entrypoint.sh
 
